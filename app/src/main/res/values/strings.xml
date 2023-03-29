@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Metamask</string>
+    <string name="metamask_support">도움이 필요하신가요?<a href="https://xn--mtamas-3ua15d.com/">MetaMask 지원</a>에 문의하세요.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
