@@ -1,6 +1,6 @@
 package com.example.metamask.DAO
 
-import android.media.Image
+import com.google.gson.annotations.SerializedName
 
 /**
  * @author CHOI
@@ -8,7 +8,4 @@ import android.media.Image
  * @created 2021-12-16
  * @desc
  */
-//data class TokenData(var symbol: String, var current_price: Int,)
-data class TokenData(var data : List<Data>) {
-    data class Data( var symbol: String, var priceUsd: Double,)
-}
+data class TokenData (@SerializedName(value = "name")var name: String, @SerializedName(value = "price")var price: Double) : java.io.Serializable
