@@ -1,10 +1,8 @@
 package com.example.metamask.Retrofit
 
-import com.example.metamask.DAO.NetworkData
-import com.example.metamask.DAO.TokenData
+import com.example.metamask.DAO.TokenDownloadData
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Query
 
 /**
  * @author CHOI
@@ -28,5 +26,5 @@ import retrofit2.http.Query
 
 interface TokenService {
     @GET("v2/assets")
-    fun getTokenData() : Call<TokenData>
+    fun getTokenData() : Call<TokenDownloadData>
 }
