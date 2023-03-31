@@ -26,7 +26,8 @@ class SwapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivitySwapBinding>(this, R.layout.activity_swap)
-        var clickedItem: GetTokenData
+        var firstSearch : GetTokenData
+        var secondSearch : GetTokenData
 
         // get token
         getToken()
@@ -37,22 +38,24 @@ class SwapActivity : AppCompatActivity() {
             finish()
         }
 
-        // search
-        binding.searchBtn.setOnClickListener {
+        // search first
+        binding.searchBtnFirst.setOnClickListener {
             var intent = Intent(this, SearchActivity::class.java)
             Log.d("tokendata1", tokendata.toString())
             intent.putExtra("tokendata", tokendata)
             startActivity(intent)
         }
         if (intent.getSerializableExtra("clickedItem") != null) {
-            clickedItem = intent.getSerializableExtra("clickedItem") as GetTokenData
-            Log.d("onClick1", clickedItem.toString())
-            binding.searchBtn.text = clickedItem.name
+            firstSearch = intent.getSerializableExtra("clickedItem") as GetTokenData
+            Log.d("onClick1", firstSearch.toString())
+            binding.searchBtnFirst.text = firstSearch.name
 //            Log.d("parseInt1", (Integer.parseInt(binding.searchUsd.text.toString()) * clickedItem.price).toString())
 //            Log.d("parseInt2", (Integer.parseInt(binding.searchUsd.text.toString()).toString()))
 //            Log.d("parseInt3", (Integer.parseInt(clickedItem.price.toString()).toString()))
 
         }
+
+        // search second
 
         // tooltip
         val balloon = Balloon.Builder(this)

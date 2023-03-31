@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.metamask.DAO.GetTokenData
-import com.example.metamask.DAO.SearchAdapter
+import com.example.metamask.DAO.SearchAdapterFirst
 import com.example.metamask.databinding.ActivitySearchBinding
 import java.util.*
 
@@ -19,7 +19,7 @@ import java.util.*
 class SearchActivity : AppCompatActivity() {
     var filteredList: ArrayList<GetTokenData> = arrayListOf()
     var linearLayoutManager: LinearLayoutManager? = null
-    var searchAdapter: SearchAdapter? = null
+    var searchAdapterFirst: SearchAdapterFirst? = null
     var tokenItem = arrayListOf<GetTokenData>()
 
     @SuppressLint("NotifyDataSetChanged")
@@ -30,13 +30,13 @@ class SearchActivity : AppCompatActivity() {
 
         Log.d("tokendata2", tokenItem.toString())
 
-        searchAdapter = SearchAdapter(tokenItem, this)
+        searchAdapterFirst = SearchAdapterFirst(tokenItem, this)
         linearLayoutManager = LinearLayoutManager(applicationContext)
         binding.recyclerviewSearch.layoutManager = linearLayoutManager
-        binding.recyclerviewSearch.adapter = searchAdapter
+        binding.recyclerviewSearch.adapter = searchAdapterFirst
 
         // filter
-        searchAdapter!!.notifyDataSetChanged()
+        searchAdapterFirst!!.notifyDataSetChanged()
         binding.EditTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -49,7 +49,7 @@ class SearchActivity : AppCompatActivity() {
             }
         })
         var clickedIntent = Intent(this, SwapActivity::class.java)
-        searchAdapter?.setItemClickListener(object : SearchAdapter.ItemClickListener {
+        searchAdapterFirst?.setItemClickListener(object : SearchAdapterFirst.ItemClickListener {
             override fun onClick(view: View, position: Int) {
                 if (filteredList.isNotEmpty()) {
 //                    Log.d("onClick3", filteredList[position].toString())
@@ -75,6 +75,6 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         Log.d("필터2", filteredList.toString())
-        searchAdapter?.filterList(filteredList)
+        searchAdapterFirst?.filterList(filteredList)
     }
 }
