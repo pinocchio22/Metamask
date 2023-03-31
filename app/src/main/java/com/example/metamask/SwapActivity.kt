@@ -26,6 +26,7 @@ class SwapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivitySwapBinding>(this, R.layout.activity_swap)
+        var clickedItem: GetTokenData
 
         // get token
         getToken()
@@ -42,6 +43,15 @@ class SwapActivity : AppCompatActivity() {
             Log.d("tokendata1", tokendata.toString())
             intent.putExtra("tokendata", tokendata)
             startActivity(intent)
+        }
+        if (intent.getSerializableExtra("clickedItem") != null) {
+            clickedItem = intent.getSerializableExtra("clickedItem") as GetTokenData
+            Log.d("onClick1", clickedItem.toString())
+            binding.searchBtn.text = clickedItem.name
+//            Log.d("parseInt1", (Integer.parseInt(binding.searchUsd.text.toString()) * clickedItem.price).toString())
+//            Log.d("parseInt2", (Integer.parseInt(binding.searchUsd.text.toString()).toString()))
+//            Log.d("parseInt3", (Integer.parseInt(clickedItem.price.toString()).toString()))
+
         }
 
         // tooltip
@@ -103,9 +113,9 @@ class SwapActivity : AppCompatActivity() {
                     Log.d("testData", "1")
                     Toast.makeText(this@SwapActivity, "최신 정보 업데이트 완료.", Toast.LENGTH_SHORT).show()
                     // response.body()가 null 이 아니면 updateAirUI()
-                    response.body()?.let {
-                        it.data.forEach {
-                            tokendata.add(GetTokenData(it.symbol, it.priceUsd))
+                    response.body()?.let { it ->
+                        it.data.forEach { data ->
+                            tokendata.add(GetTokenData(data.symbol, data.priceUsd))
                         }
                         Log.d("tokendata11", tokendata.toString())
                     }
