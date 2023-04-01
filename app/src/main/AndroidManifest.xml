@@ -14,7 +14,10 @@
         android:theme="@style/Theme.Metamask"
         tools:targetApi="31">
         <activity
-            android:name=".SearchActivity"
+            android:name=".SearchFirstActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchSecondActivity"
             android:exported="false" />
         <activity
             android:name=".SwapActivity"

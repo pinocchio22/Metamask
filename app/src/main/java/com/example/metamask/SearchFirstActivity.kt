@@ -12,11 +12,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.metamask.DAO.GetTokenData
 import com.example.metamask.DAO.SearchAdapterFirst
-import com.example.metamask.databinding.ActivitySearchBinding
+import com.example.metamask.databinding.ActivitySearchFirstBinding
 import java.util.*
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchFirstActivity : AppCompatActivity() {
     var filteredList: ArrayList<GetTokenData> = arrayListOf()
     var linearLayoutManager: LinearLayoutManager? = null
     var searchAdapterFirst: SearchAdapterFirst? = null
@@ -25,7 +25,7 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivitySearchBinding>(this, R.layout.activity_search)
+        val binding = DataBindingUtil.setContentView<ActivitySearchFirstBinding>(this, R.layout.activity_search_first)
         tokenItem = intent.getSerializableExtra("tokendata") as ArrayList<GetTokenData>
 
         Log.d("tokendata2", tokenItem.toString())
@@ -53,12 +53,14 @@ class SearchActivity : AppCompatActivity() {
             override fun onClick(view: View, position: Int) {
                 if (filteredList.isNotEmpty()) {
 //                    Log.d("onClick3", filteredList[position].toString())
-                    clickedIntent.putExtra("clickedItem", filteredList[position])
+                    clickedIntent.putExtra("clickedItemFirst", filteredList[position])
                     startActivity(clickedIntent)
+                    finish()
                 } else {
 //                    Log.d("onClick4", tokenItem[position].toString())
-                    clickedIntent.putExtra("clickedItem", tokenItem[position])
+                    clickedIntent.putExtra("clickedItemFirst", tokenItem[position])
                     startActivity(clickedIntent)
+                    finish()
                 }
             }
         })

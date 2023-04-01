@@ -6,4 +6,4 @@ package com.example.metamask.DAO
  * @created 2021-12-16
  * @desc
  */
-data class UserData(var address: String, var getToken : List<GetTokenData>,)
+data class UserData(var name: String, var address: String, var getToken : List<GetTokenData>,)

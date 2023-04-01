@@ -1,38 +1,36 @@
 package com.example.metamask
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.util.Linkify
 import android.util.Log
 import android.view.*
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.example.metamask.DAO.NetworkData
-import com.example.metamask.DAO.SpinnerAdapter
-import com.example.metamask.DAO.TokenData
-import com.example.metamask.DAO.TokenDownloadData
-import com.example.metamask.Retrofit.RetrofitConnection
-import com.example.metamask.Retrofit.TokenService
+import androidx.fragment.app.FragmentManager
+import com.example.metamask.DAO.*
 import com.example.metamask.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import retrofit2.Call
-import retrofit2.Callback
 import java.util.regex.Pattern
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : UserActivity() {
 
     private lateinit var spinnerAdapter: SpinnerAdapter
+    private lateinit var binding: ActivityMainBinding
     val tabTitle = arrayListOf("자산", "활동")
+    var addressText = ""
+    var userToken = listOf(GetTokenData("BTC",1.1))
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         var testData : MutableList<NetworkData> = mutableListOf( NetworkData("1",Color.BLACK))
 
@@ -40,11 +38,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         // context menu
-        binding.btnSwap.setOnClickListener {
-            val intent = Intent(this, SwapActivity::class.java)
-            startActivity(intent)
-        }
         registerForContextMenu(binding.imageMain)
+
+        //
+        Log.d("어댑터12", userToken.toString())
 
         // spinner
         spinnerAdapter = SpinnerAdapter(this, android.R.layout.simple_spinner_item, testData)
@@ -72,13 +69,11 @@ class MainActivity : AppCompatActivity() {
         Linkify.addLinks(binding.support, pattern, null, null, mTransform)
 
         // address
-        val addressText =  binding.accountAddress.text
-        binding.accountAddress.text = "${addressText.substring(0 until 5)}...${addressText.substring(addressText.length-4 until addressText.length)}"
-
+        addressText = binding.accountAddress.text.toString()
 
         // copy to clipboard
         binding.accountAddress.setOnClickListener {
-            createClip(addressText.toString())
+            createClip(addressText)
         }
     }
 
@@ -96,19 +91,51 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         val inflater: MenuInflater = menuInflater
+        menu?.add(0,100,0,firstUser.name)
+        menu?.add(0,101,0,secondUser.name)
+
         inflater.inflate(R.menu.account_context_menu, menu)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.context1 -> {
-                true
+        when(item.itemId) {
+            100 -> {
+                Log.d("컨텍스트", "1")
+                Toast.makeText(this, "1번", Toast.LENGTH_SHORT).show()
+                setAccount(firstUser.name, firstUser.address)
+                userToken = firstUser.getToken
+                userToken.forEach {
+                    var bundle = Bundle()
+                    Log.d("어댑터33", it.toString())
+                    bundle.putSerializable("userToken", it)
+                    AssetFragment().arguments = bundle
+                    Log.d("어댑터3333", bundle.toString())
+                }
+                AssetFragment().refreshFragment(AssetFragment(), supportFragmentManager)
+//                refreshViewpager()
             }
-            R.id.context2 -> {
-                true
+            101 -> {
+                Log.d("컨텍스트", "2")
+                Toast.makeText(this, "2번", Toast.LENGTH_SHORT).show()
+                setAccount(secondUser.name, secondUser.address)
+                userToken = secondUser.getToken
+                userToken.forEach {
+                    var bundle = Bundle()
+                    bundle.putSerializable("userToken", it)
+                    AssetFragment().arguments = bundle
+//                    Log.d("어댑터33", it.toString())
+                }
+                AssetFragment().refreshFragment(AssetFragment(), supportFragmentManager)
+//                refreshViewpager()
             }
-            else -> false
         }
+        return true
+    }
+
+    fun setAccount(name: String, address: String) {
+        binding.accountName.text = name
+        addressText = address
+        binding.accountAddress.text = "${addressText.substring(0 until 5)}...${addressText.substring(addressText.length-4 until addressText.length)}"
     }
 
 //    fun getToken() {
@@ -146,14 +173,6 @@ class MainActivity : AppCompatActivity() {
 //        })
 //    }
 
-    fun updateUI(tokenDownloadData: TokenDownloadData) {
-        var symbol: TextView = findViewById(R.id.token_name)
-        var price: TextView = findViewById(R.id.token_to_dollor)
-
-        symbol.text = tokenDownloadData.data[0].symbol
-        price.text = tokenDownloadData.data[0].priceUsd.toString()
-    }
-
     fun createClip(message: String) {
         val clipManager: ClipboardManager = applicationContext
             .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -161,5 +180,9 @@ class MainActivity : AppCompatActivity() {
         val clipdata: ClipData = ClipData.newPlainText("message", message)
         clipManager.setPrimaryClip(clipdata)
         Toast.makeText(applicationContext, "주소가 복사 되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    fun refreshViewpager() {
+        binding.viewpager.adapter?.notifyDataSetChanged()
     }
 }

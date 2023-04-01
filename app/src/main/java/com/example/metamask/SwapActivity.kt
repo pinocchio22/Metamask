@@ -3,6 +3,8 @@ package com.example.metamask
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -10,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.example.metamask.DAO.GetTokenData
-import com.example.metamask.DAO.TokenData
 import com.example.metamask.DAO.TokenDownloadData
 import com.example.metamask.Retrofit.RetrofitConnection
 import com.example.metamask.Retrofit.TokenService
@@ -21,13 +22,19 @@ import retrofit2.Callback
 
 
 class SwapActivity : AppCompatActivity() {
-
+    lateinit var binding : ActivitySwapBinding
     var tokendata : ArrayList<GetTokenData> = arrayListOf()
+    var firstSearch = GetTokenData("",0.0)
+    var secondSearch = GetTokenData("", 0.0)
+//    lateinit var firstSearch: GetTokenData
+//    lateinit var secondSearch: GetTokenData
+    lateinit var preferences: PreferenceUtil
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivitySwapBinding>(this, R.layout.activity_swap)
-        var firstSearch : GetTokenData
-        var secondSearch : GetTokenData
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_swap)
+        preferences = PreferenceUtil(applicationContext)
+//        preferences.getString("first", GetTokenData("", 0.0))
+//        preferences.getString("second",GetTokenData("", 0.0))
 
         // get token
         getToken()
@@ -39,23 +46,70 @@ class SwapActivity : AppCompatActivity() {
         }
 
         // search first
+//        var setPreFirst = preferences.setString("first",("${firstSearch.name}+${firstSearch.price}"))
+        var getPreFirst = preferences.getString("first",("${firstSearch.name}+${firstSearch.price}")).split("+")[0]
+        var getPreSecond = preferences.getString("second",("${secondSearch.name}+${secondSearch.price}")).split("+")[0]
         binding.searchBtnFirst.setOnClickListener {
-            var intent = Intent(this, SearchActivity::class.java)
+            var intent = Intent(this, SearchFirstActivity::class.java)
             Log.d("tokendata1", tokendata.toString())
             intent.putExtra("tokendata", tokendata)
             startActivity(intent)
+            finish()
         }
-        if (intent.getSerializableExtra("clickedItem") != null) {
-            firstSearch = intent.getSerializableExtra("clickedItem") as GetTokenData
+        if (intent.getSerializableExtra("clickedItemFirst") != null) {
+            firstSearch = intent.getSerializableExtra("clickedItemFirst") as GetTokenData
             Log.d("onClick1", firstSearch.toString())
+            preferences.setString("first",("${firstSearch.name}+${firstSearch.price}"))
+            Log.d("onClick111", getPreSecond)
+            Log.d("onClick1111", getPreFirst)
             binding.searchBtnFirst.text = firstSearch.name
-//            Log.d("parseInt1", (Integer.parseInt(binding.searchUsd.text.toString()) * clickedItem.price).toString())
-//            Log.d("parseInt2", (Integer.parseInt(binding.searchUsd.text.toString()).toString()))
-//            Log.d("parseInt3", (Integer.parseInt(clickedItem.price.toString()).toString()))
+            binding.searchBtnSecond.text = getPreSecond
+        }
+        binding.searchUsd.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
 
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if(binding.searchUsd.text.toString() != "") {
+                    binding.searchToDollor.text = (Integer.parseInt(binding.searchUsd.text.toString()) * (preferences.getString("first","").split("+")[1]).toDouble()).toString()
+                } else {
+                    binding.searchUsd.setText("0")
+                }
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
+        // search second
+        binding.searchBtnSecond.setOnClickListener {
+            var intent = Intent(this, SearchSecondActivity::class.java)
+            Log.d("tokendata1", tokendata.toString())
+            intent.putExtra("tokendata", tokendata)
+            startActivity(intent)
+            finish()
+        }
+        if (intent.getSerializableExtra("clickedItemSecond") != null) {
+            secondSearch = intent.getSerializableExtra("clickedItemSecond") as GetTokenData
+            Log.d("onClick2", secondSearch.toString())
+            preferences.setString("second",("${secondSearch.name}+${secondSearch.price}"))
+            Log.d("onClick111", getPreFirst)
+            Log.d("onClick1111", getPreSecond)
+            binding.searchBtnSecond.text = secondSearch.name
+            binding.searchBtnFirst.text = getPreFirst
         }
 
-        // search second
+        //change btn
+        binding.btnChange.setOnClickListener {
+            val tempFirst = preferences.getString("first","")
+            val tempSecond = preferences.getString("second","")
+            preferences.setString("first", tempSecond)
+            preferences.setString("second", tempFirst)
+            binding.searchBtnFirst.text = preferences.getString("first","").split("+")[0]
+            binding.searchBtnSecond.text = preferences.getString("second","").split("+")[0]
+            binding.searchToDollor.text = (Integer.parseInt(binding.searchUsd.text.toString()) * (preferences.getString("first","").split("+")[1]).toDouble()).toString()
+        }
+
 
         // tooltip
         val balloon = Balloon.Builder(this)
