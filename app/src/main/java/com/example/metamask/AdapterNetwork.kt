@@ -2,13 +2,12 @@ package com.example.metamask.DAO
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.BaseAdapter
 import androidx.annotation.LayoutRes
+import com.example.metamask.R
 import com.example.metamask.databinding.ItemSpinnerNetworkBinding
 
 /**
@@ -20,8 +19,8 @@ import com.example.metamask.databinding.ItemSpinnerNetworkBinding
 class SpinnerAdapter(
     context: Context,
     @LayoutRes private val resId: Int,
-    private val values: MutableList<NetworkData>
-) : ArrayAdapter<NetworkData>(context, resId, values) {
+    private val values: MutableList<String>
+) : ArrayAdapter<String>(context, resId, values) {
 
     override fun getCount() = values.size
 
@@ -32,8 +31,8 @@ class SpinnerAdapter(
         val binding = ItemSpinnerNetworkBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val model = values[position]
         try {
-            binding.spinnerColor.setBackgroundColor(model.color)
-            binding.spinnerName.text = model.name
+            if (position == 1) binding.spinnerColor.setImageResource(R.drawable.circle_blue) else binding.spinnerColor.setImageResource(R.drawable.circle_green)
+            binding.spinnerName.text = model
         }catch (e: Exception) {
             e.printStackTrace()
         }

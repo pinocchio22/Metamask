@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group>
+        <item android:title="계정 생성" android:id="@+id/item1" />
+        <item android:title="계정 가져오기" android:id="@+id/item2"/>
+        <item android:title="하드웨어 지갑 연결" android:id="@+id/item3"/>
+    </group>
+
+    <group>
+        <item android:title="지원" android:id="@+id/item4"/>
+        <item android:title="설정" android:id="@+id/item5"/>
+    </group>
+
 </menu>

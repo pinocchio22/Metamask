@@ -14,7 +14,7 @@ import com.example.metamask.databinding.ItemRecyclerviewAssetBinding
  * @created 2021-12-16
  * @desc
  */
-class RecyclerAdapter2: RecyclerView.Adapter<Holder2>() {
+class RecyclerAdapter: RecyclerView.Adapter<Holder2>() {
     var tokenList = mutableListOf<GetTokenData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : Holder2 {
@@ -24,9 +24,6 @@ class RecyclerAdapter2: RecyclerView.Adapter<Holder2>() {
 
     override fun onBindViewHolder(holder: Holder2, position: Int) {
         val token = tokenList[position]
-        Log.d("recyclerview3", token.toString())
-        Log.d("recyclerview6", tokenList.toString())
-        Log.d("recyclerview7", tokenList.size.toString())
         holder.bind(token)
     }
 
@@ -38,7 +35,6 @@ class RecyclerAdapter2: RecyclerView.Adapter<Holder2>() {
 class Holder2(val binding: ItemRecyclerviewAssetBinding) : RecyclerView.ViewHolder(binding.root) {
     @SuppressLint("SetTextI18n")
     fun bind(user: GetTokenData) {
-        Log.d("recyclerview4", user.name)
         binding.itemName.text = user.name
         binding.itemDollor.text = "$${user.price}USD"
     }

@@ -1,5 +1,6 @@
 package com.example.metamask.DAO
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
@@ -35,9 +36,6 @@ class SearchAdapterSecond(foodItemArrayList: ArrayList<GetTokenData>, activity: 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val token = tokenArrayList[position]
         holder.bind(token)
-//        binding.root.setOnClickListener {
-//            Log.d("클릭", token.toString())
-//        }
         holder.itemView.setOnClickListener {
             itemClickListner.onClick(it, position)
         }
@@ -47,6 +45,7 @@ class SearchAdapterSecond(foodItemArrayList: ArrayList<GetTokenData>, activity: 
         return tokenArrayList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun filterList(filteredList: ArrayList<GetTokenData>) {
         tokenArrayList = filteredList
         notifyDataSetChanged()
@@ -60,6 +59,7 @@ class SearchAdapterSecond(foodItemArrayList: ArrayList<GetTokenData>, activity: 
     }
 
     inner class ViewHolder(var binding: ItemSearchBinding) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(user: GetTokenData) {
             binding.searchName.text = user.name
             binding.searchPrice.text = "$${user.price}USD"

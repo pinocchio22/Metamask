@@ -28,8 +28,6 @@ class SearchFirstActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivitySearchFirstBinding>(this, R.layout.activity_search_first)
         tokenItem = intent.getSerializableExtra("tokendata") as ArrayList<GetTokenData>
 
-        Log.d("tokendata2", tokenItem.toString())
-
         searchAdapterFirst = SearchAdapterFirst(tokenItem, this)
         linearLayoutManager = LinearLayoutManager(applicationContext)
         binding.recyclerviewSearch.layoutManager = linearLayoutManager
@@ -48,16 +46,14 @@ class SearchFirstActivity : AppCompatActivity() {
             override fun afterTextChanged(editable: Editable) {
             }
         })
-        var clickedIntent = Intent(this, SwapActivity::class.java)
+        val clickedIntent = Intent(this, SwapActivity::class.java)
         searchAdapterFirst?.setItemClickListener(object : SearchAdapterFirst.ItemClickListener {
             override fun onClick(view: View, position: Int) {
                 if (filteredList.isNotEmpty()) {
-//                    Log.d("onClick3", filteredList[position].toString())
                     clickedIntent.putExtra("clickedItemFirst", filteredList[position])
                     startActivity(clickedIntent)
                     finish()
                 } else {
-//                    Log.d("onClick4", tokenItem[position].toString())
                     clickedIntent.putExtra("clickedItemFirst", tokenItem[position])
                     startActivity(clickedIntent)
                     finish()
@@ -70,13 +66,11 @@ class SearchFirstActivity : AppCompatActivity() {
     fun searchFilter(searchText: String) {
         filteredList.clear()
         for (i in 0 until tokenItem.size) {
-            if (tokenItem[i].name.toLowerCase().contains(searchText.lowercase(Locale.getDefault()))
+            if (tokenItem[i].name.lowercase(Locale.getDefault()).contains(searchText.lowercase(Locale.getDefault()))
             ) {
-                Log.d("필터", tokenItem[i].toString())
                 filteredList.add(tokenItem[i])
             }
         }
-        Log.d("필터2", filteredList.toString())
         searchAdapterFirst?.filterList(filteredList)
     }
 }

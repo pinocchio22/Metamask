@@ -28,7 +28,6 @@ class SearchSecondActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivitySearchSecondBinding>(this, R.layout.activity_search_second)
         tokenItem = intent.getSerializableExtra("tokendata") as ArrayList<GetTokenData>
 
-        Log.d("tokendata2", tokenItem.toString())
 
         searchAdapterSecond = SearchAdapterSecond(tokenItem, this)
         linearLayoutManager = LinearLayoutManager(applicationContext)
@@ -48,16 +47,14 @@ class SearchSecondActivity : AppCompatActivity() {
             override fun afterTextChanged(editable: Editable) {
             }
         })
-        var clickedIntent = Intent(this, SwapActivity::class.java)
+        val clickedIntent = Intent(this, SwapActivity::class.java)
         searchAdapterSecond?.setItemClickListener(object : SearchAdapterSecond.ItemClickListener {
             override fun onClick(view: View, position: Int) {
                 if (filteredList.isNotEmpty()) {
-//                    Log.d("onClick3", filteredList[position].toString())
                     clickedIntent.putExtra("clickedItemSecond", filteredList[position])
                     startActivity(clickedIntent)
                     finish()
                 } else {
-//                    Log.d("onClick4", tokenItem[position].toString())
                     clickedIntent.putExtra("clickedItemSecond", tokenItem[position])
                     startActivity(clickedIntent)
                     finish()
@@ -70,13 +67,11 @@ class SearchSecondActivity : AppCompatActivity() {
     fun searchFilter(searchText: String) {
         filteredList.clear()
         for (i in 0 until tokenItem.size) {
-            if (tokenItem[i].name.toLowerCase().contains(searchText.lowercase(Locale.getDefault()))
+            if (tokenItem[i].name.lowercase(Locale.getDefault()).contains(searchText.lowercase(Locale.getDefault()))
             ) {
-                Log.d("필터", tokenItem[i].toString())
                 filteredList.add(tokenItem[i])
             }
         }
-        Log.d("필터2", filteredList.toString())
         searchAdapterSecond?.filterList(filteredList)
     }
 }

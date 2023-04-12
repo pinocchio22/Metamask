@@ -10,21 +10,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  * @desc
  */
 class RetrofitConnection {
-
-//    //singleton pattern
-//    companion object {
-//        private const val BASE_URL = "https://api.coingecko.com/"
-//        private var INSTANCE : Retrofit?= null
-//
-//        fun getInstance() : Retrofit {
-//            if (INSTANCE == null) {
-//                INSTANCE = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
-//            }
-//            return INSTANCE!!
-//        }
-//    }
-
-    //singleton pattern
     companion object {
         private const val BASE_URL = "https://api.coincap.io/"
         private var INSTANCE : Retrofit?= null
